@@ -26,6 +26,8 @@ end
 require_relative 'ccrypto/public_key'
 require_relative 'ccrypto/secret_key'
 
+require_relative 'ccrypto/x509_cert'
+
 #Dir.glob(File.join(File.dirname(__FILE__),"ccrypto","spi","*_spi.rb")) do |f|
 #  require f
 #end

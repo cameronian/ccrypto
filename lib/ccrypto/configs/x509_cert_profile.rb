@@ -42,7 +42,7 @@ module Ccrypto
         @auth_key_id
       end
       def gen_auth_key_id=(val)
-        @gen_auth_key_id = val
+        @auth_key_id = val
       end
 
       def org_unit
