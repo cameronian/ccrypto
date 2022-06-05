@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     ccrypto (0.1.0)
-      tlogger
+      teLogger
       toolrack
 
 GEM
@@ -24,6 +24,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
+    teLogger (0.1.0)
     tlogger (0.26.3)
     toolrack (0.18.3)
       base58
