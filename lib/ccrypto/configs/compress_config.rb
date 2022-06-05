@@ -1,4 +1,5 @@
 
+require_relative 'algo_config'
 
 module Ccrypto
   class CompressionConfig
