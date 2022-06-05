@@ -6,8 +6,25 @@ module Ccrypto
     def initialize(pubkey)
       @native_pubKey = pubkey
     end
-  end
 
-  class ECCPublicKey < PublicKey
-  end
+    def method_missing(mtd, *args, &block)
+      if @native_pubKey.nil?
+        super
+      else
+        @native_pubKey.send(mtd, *args, &block)
+      end
+    end
+
+    def respond_to_missing?(mtd, *args, &block)
+      if @native_pubKey.nil?
+        false
+      else
+        @native_pubKey.respond_to?(mtd)
+      end
+    end
+
+  end # PublicKey
+
+  class ECCPublicKey < PublicKey; end
+  class RSAPublicKey < PublicKey; end
 end
