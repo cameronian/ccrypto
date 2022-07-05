@@ -6,8 +6,9 @@ It is rooted in Ruby because of its expressiveness.
 
 This gem is mainly provide high level common elements for the implemented runtime to select a proper implementation.
 
-This including all the classes under the configs/ directory. Those are suppose to be parameter pass to the runtime implementation to pick the required implementation under that runtime.
+This including all the classes under the lib/ccrypto/configs/ directory. Those are suppose to be parameter pass to the runtime implementation to pick the required implementation under that runtime.
 
+Note this layer is suppose to be barebone native cryptographic algorithm API which should be just thin wrapper around the runtime cryptographic library
 
 ## Installation
 
