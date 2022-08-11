@@ -45,6 +45,8 @@ module Ccrypto
   class SecretSharingException < StandardError; end
 
   class X509CertException < StandardError; end
+  class X509CertNotBeforeException < StandardError; end
+  class X509CertNotAfterException < StandardError; end
 
   class KeyBundleStorageException < StandardError; end
   # Your code goes here...
