@@ -16,11 +16,14 @@ module Ccrypto
       attr_accessor :owner_name, :org
       attr_accessor :org_unit, :email, :dns_name, :ip_addr, :uri
       attr_accessor :public_key, :serial, :not_before, :not_after
+      attr_accessor :csr
       attr_accessor :subj_key_id, :auth_key_id
       attr_accessor :crl_dist_point, :ocsp_url, :issuer_url
       attr_accessor :issuer_cert
       attr_accessor :hashAlgo
       attr_accessor :raise_if_validity_date_not_in_issuer_range
+
+      attr_accessor :issuer_path_len
 
       def initialize
         @hashAlgo = Ccrypto::SHA256
@@ -65,6 +68,18 @@ module Ccrypto
         end
       end
 
+      def email=(val)
+        if @email.nil?
+          @email = []
+        end
+
+        case val
+        when Array
+          @email += val
+        else
+          @email << val
+        end
+      end
       def email
         if @email.nil?
           []
@@ -75,6 +90,18 @@ module Ccrypto
         end
       end
 
+      def dns_name=(val)
+        if @dns_name.nil?
+          @dns_name = []
+        end
+
+        case val
+        when Array
+          @dns_name += val
+        else
+          @dns_name << val
+        end
+      end
       def dns_name
         if @dns_name.nil?
           []
@@ -85,6 +112,19 @@ module Ccrypto
         end
       end
 
+
+      def ip_addr=(val)
+        if @ip_addr.nil?
+          @ip_addr = []
+        end
+
+        case val
+        when Array
+          @ip_addr += val
+        else
+          @ip_addr << val
+        end
+      end
       def ip_addr
         if @ip_addr.nil?
           []
@@ -92,6 +132,19 @@ module Ccrypto
           [@ip_addr]
         else
           @ip_addr
+        end
+      end
+
+      def uri=(val)
+        if @uri.nil?
+          @uri = []
+        end
+
+        case val
+        when Array
+          @uri += val
+        else
+          @uri << val
         end
       end
 
@@ -290,6 +343,17 @@ module Ccrypto
           @domainKeyUsage = {  }
         end
         @domainKeyUsage
+      end
+
+      def add_custom_extension(oid, value, type = :string, critical = false)
+        custom_extension[oid] = { type: type, value: value, critical: critical }
+      end
+
+      def custom_extension
+        if @custom_extension.nil?
+          @custom_extension = {  }
+        end
+        @custom_extension
       end
 
     end

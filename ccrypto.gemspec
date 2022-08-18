@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ian"]
   spec.email         = ["cameronian0@protonmail.com"]
 
-  spec.summary       = ""
-  spec.description   = ""
+  spec.summary       = "Crypto API normalization for Ruby and Java"
+  spec.description   = "Attempt to have a common crypto for Ruby and Java to take the selection decision out from the application development until further date"
   spec.homepage      = "https://github.com/cameronian/ccrypto"
   spec.required_ruby_version = ">= 2.4.0"
 

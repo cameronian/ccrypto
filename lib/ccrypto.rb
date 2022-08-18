@@ -23,6 +23,7 @@ require_relative 'ccrypto/private_key'
 require_relative 'ccrypto/secret_key'
 
 require_relative 'ccrypto/x509_cert'
+require_relative 'ccrypto/x509_csr'
 
 module Ccrypto
   class Error < StandardError; end
@@ -34,6 +35,10 @@ module Ccrypto
   class KeypairEngineException < StandardError; end
   class KeyBundleException < StandardError; end
   class X509EngineException < StandardError; end
+
+  class X509CSRException < StandardError; end
+  class X509CSRSignatureInvalid < StandardError; end
+
   class CipherEngineException < StandardError; end
   class ASN1EngineException < StandardError; end
 
