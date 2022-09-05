@@ -27,4 +27,6 @@ module Ccrypto
 
   class ECCPublicKey < PublicKey; end
   class RSAPublicKey < PublicKey; end
+  class ED25519PublicKey < PublicKey; end
+  class X25519PublicKey < PublicKey; end
 end

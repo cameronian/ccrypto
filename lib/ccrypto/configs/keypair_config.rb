@@ -51,4 +51,12 @@ module Ccrypto
     end
   end
 
+  # ED25519 for data signature
+  class ED25519Config < KeypairConfig
+  end
+
+  # X25519 for key exchange
+  class X25519Config < KeypairConfig
+  end
+
 end

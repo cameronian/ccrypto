@@ -41,6 +41,7 @@ module Ccrypto
     # https://stackoverflow.com/a/33297994/3625825
 
     def initialize
+      @algo = :scrypt
       @cost = 16384 # 2**14
       @blockSize = 8
       @parallel = 1
@@ -51,6 +52,7 @@ module Ccrypto
   class HKDFConfig < KDFConfig
     attr_accessor :salt, :info, :digest
     def initialize
+      @algo = :hkdf
       @salt = SecureRandom.random_bytes(16)
       @digest = :sha256
     end
@@ -59,9 +61,48 @@ module Ccrypto
   class PBKDF2Config < KDFConfig
     attr_accessor :salt, :digest, :iter
     def initialize
+      @algo = :pbkdf2
       @salt = SecureRandom.random_bytes(16)
       @digest = :sha256
       @iter = rand(200000..400000)
     end
   end
+
+  class Argon2Config < KDFConfig
+
+    attr_accessor :cost, :salt, :secret, :parallel, :iter
+    attr_accessor :variant
+
+    def initialize
+
+      @algo = :argon2
+
+      # "salt" which can be stored non-secure or with the password Hash
+      @salt = SecureRandom.random_bytes(16)
+      
+      # Secret value which has to be stored in a different secure location from the password hashes
+      @secret = SecureRandom.random_bytes(16)
+
+      # The RFC recommends 4 GB for backend authentication and 1 GB for frontend authentication.
+      @cost = 1*1024*1024*1024 
+
+      # Choose the Number of CPU-Threads you can afford each call (2 Cores = 4 Threads)
+      @parallel = 4
+
+      # Set the number of Iterations each call -> More Iterations = Better Security + more Hashing Time
+      # > 3 Iterations recommended
+      @iter = 3
+
+      # Follow BC library
+      # Argon2d
+      # Argon2i (recommended)
+      # Argon2id
+      # Argon2_version_10
+      # Argon2_version_13
+      @variant = :argon2i
+
+    end
+
+  end
+
 end

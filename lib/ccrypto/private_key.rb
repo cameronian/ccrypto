@@ -27,4 +27,6 @@ module Ccrypto
 
   class ECCPrivateKey < PrivateKey; end
   class RSAPrivateKey < PrivateKey; end
+  class ED25519PrivateKey < PrivateKey; end
+  class X25519PrivateKey < PrivateKey; end
 end
