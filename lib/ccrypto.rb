@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'toolrack'
-require 'tlogger'
+require 'teLogger'
 
 require_relative "ccrypto/version"
 
