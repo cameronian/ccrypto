@@ -54,7 +54,7 @@ module Ccrypto
     def initialize
       @algo = :hkdf
       @salt = SecureRandom.random_bytes(16)
-      @digest = :sha256
+      @digest = :sha3_256
     end
   end
 
@@ -63,8 +63,8 @@ module Ccrypto
     def initialize
       @algo = :pbkdf2
       @salt = SecureRandom.random_bytes(16)
-      @digest = :sha256
-      @iter = rand(200000..400000)
+      @digest = :sha3_256
+      @iter = rand(300000..500000)
     end
   end
 
