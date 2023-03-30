@@ -8,6 +8,7 @@ require_relative "ccrypto/version"
 require_relative 'ccrypto/provider'
 require_relative 'ccrypto/algo_factory'
 require_relative 'ccrypto/key_bundle'
+require_relative 'ccrypto/supported_cipher_list'
 
 require_relative 'ccrypto/asn1'
 require_relative 'ccrypto/asn1_object'

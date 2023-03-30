@@ -3,6 +3,11 @@
 module Ccrypto
   module KeyBundle
     attr_accessor :nativeKeypair
+
+    def KeyBundle.from_storage(*args, &block)
+      Provider.instance.provider.keybundle_from_storage(*args, &block)
+    end
+
   end
 
   module ECCKeyBundle

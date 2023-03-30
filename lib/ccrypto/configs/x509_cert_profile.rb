@@ -15,7 +15,8 @@ module Ccrypto
 
       attr_accessor :owner_name, :org
       attr_accessor :org_unit, :email, :dns_name, :ip_addr, :uri
-      attr_accessor :public_key, :serial, :not_before, :not_after
+      attr_accessor :locality, :country
+      attr_accessor :public_key, :serial # , :not_before, :not_after
       attr_accessor :csr
       attr_accessor :subj_key_id, :auth_key_id
       attr_accessor :crl_dist_point, :ocsp_url, :issuer_url
@@ -36,6 +37,28 @@ module Ccrypto
         @not_after = Time.new(now.year+2, now.month, now.day)
         @raise_if_validity_date_not_in_issuer_range = false
       end
+
+      def not_before=(val)
+        @not_before = val
+      end
+      alias_method :valid_from=, :not_before=
+
+      def not_before
+        @not_before
+      end
+      alias_method :valid_from, :not_before
+
+      def not_after=(val)
+        @not_after = val
+      end
+      alias_method :valid_until=, :not_after=
+      alias_method :valid_to=, :not_after=
+      
+      def not_after
+        @not_after
+      end
+      alias_method :valid_until, :not_after
+      alias_method :valid_to, :not_after
 
       def gen_issuer_cert?
         @issuerCert
@@ -289,8 +312,8 @@ module Ccrypto
           clientAuth: "TLS client authentication",
           codeSigning: "Code signing",
           emailProtection: "Email protection",
-          timestamping: "Time stamping",
-          ocspSigning: "Online Cert Status Protocol signing",
+          timeStamping: "Time stamping",
+          OCSPSigning: "Online Cert Status Protocol signing",
           ipSecIKE: "IPSec Initial Key Exchange",
           msCodeInd: "Microsoft Code Ind",
           msCodeCom: "Microsoft Code Com",
