@@ -16,7 +16,7 @@ module Ccrypto
     attr_accessor :cipherOps
 
     # required by certain mode such as CCM
-    attr_accessor :plaintext_length, :ciphertext_length
+    attr_accessor :plaintext_length, :ciphertext_length, :fixed_auth_tag_length
 
     # Use cases : 
     # openssl aes-128-xts only accepts input min 16 bytes
@@ -37,6 +37,7 @@ module Ccrypto
       @ciphertext_length = 0
       @min_input_length = -1
       @mandatory_Block_size = -1
+      @fixed_iv_length = -1
       
       if not_empty?(opts) and opts.is_a?(Hash)
         @mode = opts[:mode]
@@ -65,6 +66,8 @@ module Ccrypto
         @min_input_length = opts[:min_input_length] || -1 
 
         @mandatory_block_size = opts[:mandatory_block_size] || -1
+
+        @fixed_auth_tag_length = opts[:fixed_auth_tag_length] || -1
 
       end
 
@@ -107,8 +110,16 @@ module Ccrypto
       not_empty?(@key)
     end
 
+    def has_min_input_length?
+      not_empty?(@min_input_length) and @min_input_length.to_i > -1
+    end
+
+    def has_fixed_auth_tag_length?
+      not_empty?(@fixed_auth_tag_length) and @fixed_auth_tag_length.to_i > -1
+    end
+
     def is_auth_mode_cipher?
-      @authMode
+      @authMode == true
     end
 
     def is_algo?(algo)
@@ -123,8 +134,16 @@ module Ccrypto
       if @mode.nil? or is_empty?(@mode)
         false
       else
-        (@mode.to_s.downcase =~ /#{mode.to_s}/) != nil
+        (@mode.to_s.downcase =~ /#{mode.to_s.downcase}/) != nil
       end
+    end
+
+    def needs_plaintext_length?
+      is_mode?(:ccm)
+    end
+
+    def needs_ciphertext_length?
+      is_mode?(:ccm)
     end
 
     def encrypt_cipher_mode

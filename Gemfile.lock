@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ccrypto (0.1.1)
+    ccrypto (0.1.2)
       activesupport
       teLogger
       toolrack
@@ -14,11 +14,10 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    base58 (0.2.3)
     concurrent-ruby (1.2.2)
-    devops_assist (0.3.9)
+    devops_assist (0.3.11)
       git_cli
-      git_cli_prompt
+      git_cli_prompt (~> 0.3.3)
       gvcs
       teLogger
       toolrack
@@ -29,7 +28,7 @@ GEM
       ptools (~> 1.4.0)
       teLogger
       toolrack
-    git_cli_prompt (0.3.2)
+    git_cli_prompt (0.3.4)
       teLogger
       toolrack
       tty-prompt
@@ -50,13 +49,12 @@ GEM
     rspec-expectations (3.12.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.4)
+    rspec-mocks (3.12.5)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
     teLogger (0.2.2)
-    toolrack (0.20.2)
-      base58
+    toolrack (0.21.0)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
     tty-prompt (0.23.1)

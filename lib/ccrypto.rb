@@ -56,4 +56,7 @@ module Ccrypto
 
   class KeyBundleStorageException < StandardError; end
   # Your code goes here...
+
+  Root_OID = ["2","0","18"]
+
 end

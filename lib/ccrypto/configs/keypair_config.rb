@@ -17,6 +17,8 @@ module Ccrypto
 
     attr_reader :default
 
+    attr_accessor :native_config 
+
     def initialize(status = Algo_Active, default = false)
       @algo_status = status
       @default = default
