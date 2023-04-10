@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ccrypto (0.1.3)
+    ccrypto (0.1.4)
       activesupport
       teLogger
       toolrack
@@ -24,8 +24,7 @@ GEM
       toolrack
       tty-prompt
     diff-lcs (1.5.0)
-    git_cli (0.11.4)
-      gvcs
+    git_cli (0.12.0)
       ptools (~> 1.4.0)
       teLogger
       toolrack
@@ -41,7 +40,7 @@ GEM
       tty-color (~> 0.5)
     ptools (1.4.3)
     rake (13.0.6)
-    release-gem (0.1.17)
+    release-gem (0.1.19)
       colorize
       git_cli
       gvcs
