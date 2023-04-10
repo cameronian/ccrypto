@@ -8,3 +8,4 @@ require 'devops_assist'
 RSpec::Core::RakeTask.new(:spec)
 
 task default: :spec
+require 'release/gem'

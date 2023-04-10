@@ -16,7 +16,7 @@ module Ccrypto
       attr_accessor :hashAlgo
 
       def initialize
-        @hashAlgo = Ccrypto::SHA256
+        @hashAlgo = :sha256
       end
 
       def org_unit

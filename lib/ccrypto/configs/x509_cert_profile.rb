@@ -27,7 +27,7 @@ module Ccrypto
       attr_accessor :issuer_path_len
 
       def initialize
-        @hashAlgo = Ccrypto::SHA256
+        @hashAlgo = :sha256
         @serial = SecureRandom.hex(16)
         @subj_key_id = true
         @auth_key_id = true

@@ -41,6 +41,8 @@ module Ccrypto
       
       if not_empty?(opts) and opts.is_a?(Hash)
         @mode = opts[:mode]
+        
+        @iv_required = ! ([:ecb].include?(@mode))
 
         @authMode = opts[:authMode] || false
         #if is_mode?(:gcm)
@@ -69,6 +71,10 @@ module Ccrypto
 
         @fixed_auth_tag_length = opts[:fixed_auth_tag_length] || -1
 
+      end
+
+      def iv_required?
+        @iv_required
       end
 
       #if block

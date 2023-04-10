@@ -28,7 +28,7 @@ module Ccrypto
       raise SupportedCipherListError, "Ccrypto::CipherConfig required. Got '#{cc.class}'" if not cc.is_a?(Ccrypto::CipherConfig)
 
       @items << cc
-      algo = cc.algo.to_sym
+      algo = cc.algo.to_s.downcase.to_sym
       @algos[algo] = [] if @algos[algo].nil?
       @algos[algo] << cc
 
@@ -36,7 +36,7 @@ module Ccrypto
       @keysizes[keysize] = [] if @keysizes[keysize].nil?
       @keysizes[keysize] << cc
 
-      mode = cc.mode.nil? ? "" : cc.mode.to_s
+      mode = cc.mode.nil? ? "" : cc.mode.to_s.downcase
       if not_empty?(mode)
         @modes[mode] = [] if @modes[mode].nil?
         @modes[mode] << cc
@@ -64,7 +64,7 @@ module Ccrypto
     end
 
     def items
-      @items.freeze
+      @items.sort.freeze
     end
 
     def each(&block)
@@ -75,8 +75,12 @@ module Ccrypto
       @algos.length
     end
     def find_algo(algo)
-      res = @algos[algo.to_sym] || []
+      res = @algos[algo.to_s.downcase.to_sym] || []
       res.freeze
+    end
+
+    def is_list_empty?
+      @algos.length == 0
     end
 
     # Problem with this is the algo is in symbol
@@ -113,28 +117,48 @@ module Ccrypto
     end
 
     def find_algo_keysize(algo, keysize)
-      res = @algoKeysize[algo.to_sym] || {  }
-      res = res[keysize.to_s] || []
-      res.freeze
+      if is_empty?(algo) or is_empty?(keysize)
+        teLogger.debug "Return empty due to empty parameters"
+        []
+      else
+        res = @algoKeysize[algo.to_s.downcase.to_sym] || {  }
+        res = res[keysize.to_s] || []
+        res.freeze
+      end
     end
 
     def find_algo_mode(algo, mode)
-      res = @algoMode[algo.to_sym] || {}
-      res = res[mode.to_s] || []
-      res.freeze
+      if is_empty?(algo) or is_empty?(mode)
+        teLogger.debug "Return empty due to empty parameters"
+        []
+      else
+        res = @algoMode[algo.to_s.downcase.to_sym] || {}
+        res = res[mode.to_s] || []
+        res.freeze
+      end
     end
 
     def find_algo_keysize_mode(algo, keysize, mode)
-      res = @algoKeysizeMode[algo.to_sym] || {}
-      res = res[keysize.to_s] || {}
-      res = res[mode.to_s] || []
-      res.freeze
+      if is_empty?(algo) or is_empty?(keysize) or is_empty?(mode)
+        teLogger.debug "Return empty due to empty parameters"
+        []
+      else
+        res = @algoKeysizeMode[algo.to_s.downcase.to_sym] || {}
+        res = res[keysize.to_s] || {}
+        res = res[mode.to_s] || []
+        res.freeze
+      end
     end
 
     def find_keysize_modes(keysize, mode)
-      res = @keysizeMode[keysize.to_s] || {}
-      res = res[mode.to_s] || []
-      res.freeze
+      if is_empty?(keysize) or is_empty?(mode)
+        teLogger.debug "Return empty due to empty parameters"
+        []
+      else
+        res = @keysizeMode[keysize.to_s] || {}
+        res = res[mode.to_s] || []
+        res.freeze
+      end
     end
 
   end
