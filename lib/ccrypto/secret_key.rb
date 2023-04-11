@@ -9,5 +9,9 @@ module Ccrypto
       @algo = algo
       @key = key
     end
+
+    def native
+      @key
+    end
   end
 end

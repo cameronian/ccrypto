@@ -15,6 +15,10 @@ module Ccrypto
       end
     end
 
+    def native
+      @native_pubKey
+    end
+
     def respond_to_missing?(mtd, *args, &block)
       if @native_pubKey.nil?
         false

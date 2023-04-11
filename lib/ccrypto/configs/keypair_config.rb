@@ -128,4 +128,29 @@ module Ccrypto
     end
   end
 
+  # PQ Crystal Kyber
+  class CrystalKyberConfig < KeypairConfig
+    def self.name
+      "PQ Crystal Kyber Family (for Cipher)"
+    end
+    def initialize(kyberParam, default = false)
+      @algo = kyberParam
+      super(Algo_Active, default)
+    end
+  end
+
+  # PQ Crystal Dlithium
+  class CrystalDilithiumConfig < KeypairConfig
+    def self.name
+      "PQ Crystal Dilithium Family (for Signing)"
+    end
+    def initialize(param, default = false)
+      @algo = param
+      super(Algo_Active, default)
+    end
+    def to_s
+      "PQ Crystal Dilithium #{@algo.name}"
+    end
+  end
+
 end

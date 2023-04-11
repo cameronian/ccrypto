@@ -23,6 +23,10 @@ module Ccrypto
       end
     end
 
+    def native
+      @native_privKey
+    end
+
   end # PrivateKey
 
   class ECCPrivateKey < PrivateKey; end

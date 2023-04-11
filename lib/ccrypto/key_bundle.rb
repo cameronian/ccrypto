@@ -2,10 +2,14 @@
 
 module Ccrypto
   module KeyBundle
-    attr_accessor :nativeKeypair
+    attr_reader :nativeKeypair
 
     def KeyBundle.from_storage(*args, &block)
       Provider.instance.provider.keybundle_from_storage(*args, &block)
+    end
+
+    def native
+      @nativeKeypair
     end
 
   end
