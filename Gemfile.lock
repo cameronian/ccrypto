@@ -40,7 +40,7 @@ GEM
       tty-color (~> 0.5)
     ptools (1.4.3)
     rake (13.0.6)
-    release-gem (0.1.19)
+    release-gem (0.1.22)
       colorize
       git_cli
       gvcs
@@ -82,6 +82,7 @@ GEM
 PLATFORMS
   ruby
   universal-java-1.8
+  universal-java-17
   x86_64-linux
 
 DEPENDENCIES

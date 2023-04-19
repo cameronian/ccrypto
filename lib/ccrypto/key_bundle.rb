@@ -11,6 +11,21 @@ module Ccrypto
     def native
       @nativeKeypair
     end
+    alias_method :keypair, :native
+
+    private
+    def method_missing(mtd, *args, &block)
+      if not @nativeKeypair.nil?
+        logger.debug "Sending to method #{mtd} of object '#{@nativeKeypair}' at KeyBundle level"
+        @nativeKeypair.send(mtd, *args, &block)
+      else
+        super
+      end
+    end
+
+    def logger
+      Ccrypto.logger(:keybundle)
+    end
 
   end
 

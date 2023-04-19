@@ -1,5 +1,6 @@
 
-require 'singleton'
+require 'yaml'
+require 'fileutils'
 
 module Ccrypto
 
@@ -7,27 +8,55 @@ module Ccrypto
 
   class SupportedCipherList
     include TR::CondUtils
-    include Singleton
 
-    include TeLogger::TeLogHelper
-    teLogger_tag :supCipherList
-
-    def initialize
+    def initialize(provider)
       @algos = {}
       @keysizes = {}
       @modes = {}
+      @padding = {}
 
       @algoKeysize = {}
       @algoKeysizeMode = {}
+      @algoKeysizeModePad = {}
+
       @keysizeMode = {}
       @algoMode = {}
       @items = []
+      
+      @provider = provider
+
+    end
+
+    def dump_to_cache(root = Dir.home)
+      cacheFile = File.join(root, ".ccrypto","#{@provider.gsub(" ",".")}.cache")
+      FileUtils.mkdir_p(File.dirname(cacheFile)) if not File.exist?(File.dirname(cacheFile))
+
+      File.open(cacheFile,"w") do |f|
+        f.write YAML.dump(self)
+      end
+    end
+
+    def self.load_from_cache(provider, root = Dir.home)
+      cacheFile = File.join(root, ".ccrypto","#{provider.gsub(" ",".")}.cache")
+      if File.exist?(cacheFile)
+        YAML.unsafe_load_file(cacheFile)
+        #File.open(cacheFile,"r") do |f|
+        #  @cont = f.read
+        #end
+        #if not_empty?(@cont)
+        #  YAML.load(@cont)
+        #else
+        #  SupportedCipherList.new(provider)
+        #end
+      else
+        SupportedCipherList.new(provider)
+      end
     end
 
     def register(cc)
       raise SupportedCipherListError, "Ccrypto::CipherConfig required. Got '#{cc.class}'" if not cc.is_a?(Ccrypto::CipherConfig)
 
-      @items << cc
+      @items << cc.freeze
       algo = cc.algo.to_s.downcase.to_sym
       @algos[algo] = [] if @algos[algo].nil?
       @algos[algo] << cc
@@ -46,6 +75,8 @@ module Ccrypto
       @algoKeysize[algo][keysize] = [] if @algoKeysize[algo][keysize].nil?
       @algoKeysize[algo][keysize] << cc
 
+      padding = cc.padding.nil? ? "" : cc.padding.to_s
+
       if not_empty?(mode)
         @algoMode[algo] = {} if @algoMode[algo].nil?
         @algoMode[algo][mode] = [] if @algoMode[algo][mode].nil?
@@ -59,8 +90,18 @@ module Ccrypto
         @algoKeysizeMode[algo][keysize] = {} if @algoKeysizeMode[algo][keysize].nil?
         @algoKeysizeMode[algo][keysize][mode] = [] if @algoKeysizeMode[algo][keysize][mode].nil?
         @algoKeysizeMode[algo][keysize][mode] << cc
+
+        @algoKeysizeModePad[algo] = {} if @algoKeysizeModePad[algo].nil?
+        @algoKeysizeModePad[algo][keysize] = {} if @algoKeysizeModePad[algo][keysize].nil?
+        @algoKeysizeModePad[algo][keysize][mode] = {} if @algoKeysizeModePad[algo][keysize][mode].nil?
+        @algoKeysizeModePad[algo][keysize][mode][padding] = [] if @algoKeysizeModePad[algo][keysize][mode][padding].nil?
+        @algoKeysizeModePad[algo][keysize][mode][padding] << cc
       end 
 
+    end
+
+    def length
+      @items.length
     end
 
     def items
@@ -93,7 +134,7 @@ module Ccrypto
     end
 
     def is_algo_supported?(algo)
-      @algos.keys.include?(algo.to_sym)
+      @algos.keys.include?(algo.to_s.downcase.to_sym)
     end
 
     def keysizes_count
@@ -118,7 +159,7 @@ module Ccrypto
 
     def find_algo_keysize(algo, keysize)
       if is_empty?(algo) or is_empty?(keysize)
-        teLogger.debug "Return empty due to empty parameters"
+        logger.debug "Return empty due to empty parameters"
         []
       else
         res = @algoKeysize[algo.to_s.downcase.to_sym] || {  }
@@ -129,7 +170,7 @@ module Ccrypto
 
     def find_algo_mode(algo, mode)
       if is_empty?(algo) or is_empty?(mode)
-        teLogger.debug "Return empty due to empty parameters"
+        logger.debug "Return empty due to empty parameters"
         []
       else
         res = @algoMode[algo.to_s.downcase.to_sym] || {}
@@ -140,7 +181,7 @@ module Ccrypto
 
     def find_algo_keysize_mode(algo, keysize, mode)
       if is_empty?(algo) or is_empty?(keysize) or is_empty?(mode)
-        teLogger.debug "Return empty due to empty parameters"
+        logger.debug "Return empty due to empty parameters"
         []
       else
         res = @algoKeysizeMode[algo.to_s.downcase.to_sym] || {}
@@ -150,15 +191,33 @@ module Ccrypto
       end
     end
 
+    def find_algo_keysize_mode_padding(algo, keysize, mode, padding)
+      if is_empty?(algo) or is_empty?(keysize) or is_empty?(mode) or is_empty?(padding)
+        logger.debug "Return empty due to empty parameters"
+        []
+      else
+        res = @algoKeysizeModePad[algo.to_s.downcase.to_sym] || {}
+        res = res[keysize.to_s] || {}
+        res = res[mode.to_s] || {}
+        res = res[padding.to_s] || []
+        res.freeze
+      end
+    end
+
     def find_keysize_modes(keysize, mode)
       if is_empty?(keysize) or is_empty?(mode)
-        teLogger.debug "Return empty due to empty parameters"
+        logger.debug "Return empty due to empty parameters"
         []
       else
         res = @keysizeMode[keysize.to_s] || {}
         res = res[mode.to_s] || []
         res.freeze
       end
+    end
+
+    private
+    def logger
+      Ccrypto.logger(:supported_cipher_list)
     end
 
   end

@@ -2,10 +2,6 @@
 
 module Ccrypto
 
-  module CipherAuthMode
-    attr_accessor :auth_data, :auth_tag
-  end
-
   class CipherConfig
     include AlgoConfig
     include TR::CondUtils
@@ -26,6 +22,9 @@ module Ccrypto
     # provider specific
     attr_accessor :native_config
 
+    # Authenticated mode
+    attr_accessor :auth_data, :auth_tag
+
     def initialize(algo, opts = {  }, &block)
       @algo = algo
 
@@ -36,7 +35,7 @@ module Ccrypto
       @plaintext_length = 0
       @ciphertext_length = 0
       @min_input_length = -1
-      @mandatory_Block_size = -1
+      @mandatory_block_size = -1
       @fixed_iv_length = -1
       
       if not_empty?(opts) and opts.is_a?(Hash)
@@ -47,8 +46,8 @@ module Ccrypto
         @authMode = opts[:authMode] || false
         #if is_mode?(:gcm)
         if @authMode
-          self.extend CipherAuthMode
-          @logger.debug "Extending auth mode"
+          #self.extend CipherAuthMode
+          #@logger.debug "Extending auth mode"
 
           @auth_data = opts[:auth_data]
           @auth_tag = opts[:auth_tag]
@@ -71,41 +70,13 @@ module Ccrypto
 
         @fixed_auth_tag_length = opts[:fixed_auth_tag_length] || -1
 
+        @native_config = opts[:native_config]
       end
 
-      def iv_required?
-        @iv_required
-      end
-
-      #if block
-      #  @mode = block.call(:mode)
-
-      #  #if is_mode?(:gcm)
-      #  if @authMode
-      #    self.extend CipherAuthMode
-      #    @logger.debug "Extending auth mode"
-
-      #    @auth_data = block.call(:auth_data)
-      #    @auth_tag = block.call(:auth_tag)
-      #  end
-
-      #  @iv = block.call(:iv)
-      #  @ivLength = block.call(:ivLength) || 16 if @iv.nil?
-
-      #  @key = block.call(:key)
-      #  @keysize = block.call(:keysize) if @key.nil?
-
-      #  @padding = block.call(:padding)
-
-      #  @cipherOps = block.call(:cipherOps)
-
-      #  @plaintext_length = 0
-      #  @ciphertext_length = 0
-
-      #  @min_input_length = opts[:min_input_length] || -1 
-
-      #end
-
+    end
+    
+    def iv_required?
+      @iv_required
     end
 
     def has_iv?
@@ -122,6 +93,10 @@ module Ccrypto
 
     def has_fixed_auth_tag_length?
       not_empty?(@fixed_auth_tag_length) and @fixed_auth_tag_length.to_i > -1
+    end
+
+    def has_mandatory_block_size?
+      not_empty?(@mandatory_block_size) and @mandatory_block_size.to_i > -1
     end
 
     def is_auth_mode_cipher?

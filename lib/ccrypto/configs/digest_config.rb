@@ -6,7 +6,9 @@ module Ccrypto
     include TR::CondUtils
 
     attr_reader :algo, :outBitLength, :outByteLength
-    attr_reader :fixed_input_len_byte, :provider_config
+    attr_reader :fixed_input_len_byte
+    # variable allow provider to put things related to the provider e.g. JCE provider etc
+    attr_accessor :provider_config
     def initialize(algo, outBitLen, opts = {  })
       @algo = algo
       @outBitLength = outBitLen
@@ -24,6 +26,10 @@ module Ccrypto
     def has_fixed_input_len_byte?
       @fixed_input_len_byte != -1
     end
+
+    #def to_s
+    #  "Digest #{algo}"
+    #end
 
   end
 
