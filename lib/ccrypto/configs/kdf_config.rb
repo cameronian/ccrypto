@@ -3,11 +3,12 @@
 module Ccrypto
   class KDFConfig
     include AlgoConfig
-    attr_accessor :algo, :outBitLength 
+    attr_accessor :algo
   end
 
   class ScryptConfig < KDFConfig
-    attr_accessor :cost, :blockSize, :parallel, :salt
+    attr_accessor :cost, :blocksize, :parallel
+    attr_accessor :outBitLength, :salt
     
     # https://stackoverflow.com/questions/11126315/what-are-optimal-scrypt-work-factors
     # Specific good explanation:
@@ -43,35 +44,43 @@ module Ccrypto
     def initialize
       @algo = :scrypt
       @cost = 16384 # 2**14
-      @blockSize = 8
+      @blocksize = 8
       @parallel = 1
       @salt = SecureRandom.random_bytes(16)
     end
   end
 
   class HKDFConfig < KDFConfig
-    attr_accessor :salt, :info, :digest
+    attr_accessor :salt, :digest, :outBitLength
+    attr_accessor :info
+    attr_accessor :provider_config
     def initialize
       @algo = :hkdf
       @salt = SecureRandom.random_bytes(16)
       @digest = :sha3_256
     end
-  end
+  end # HKDFConfig
 
   class PBKDF2Config < KDFConfig
     attr_accessor :salt, :digest, :iter
+    attr_accessor :outBitLength
     def initialize
       @algo = :pbkdf2
       @salt = SecureRandom.random_bytes(16)
       @digest = :sha3_256
       @iter = rand(300000..500000)
     end
-  end
+  end # PBKDF2Config
 
   class Argon2Config < KDFConfig
 
     attr_accessor :cost, :salt, :secret, :parallel, :iter
     attr_accessor :variant
+    attr_accessor :outBitLength
+
+    def self.variants
+      [:argon2d, :argon2i, :argon2id, :argon2_version_10, :argon2_version_13].freeze
+    end
 
     def initialize
 
@@ -81,13 +90,15 @@ module Ccrypto
       @salt = SecureRandom.random_bytes(16)
       
       # Secret value which has to be stored in a different secure location from the password hashes
-      @secret = SecureRandom.random_bytes(16)
+      #@secret = SecureRandom.random_bytes(16)
 
-      # The RFC recommends 4 GB for backend authentication and 1 GB for frontend authentication.
-      @cost = 1*1024*1024*1024 
+      # The RFC recommends 4 GB for backend authentication and 1 GB for frontend authentication. 
+      # Unit is in Kilobytes. Min is 8 kb. Convert internally to kb hence the value is 8192
+      # 1024*1024 = 1048576 (1GB)
+      @cost = 1048576
 
       # Choose the Number of CPU-Threads you can afford each call (2 Cores = 4 Threads)
-      @parallel = 4
+      @parallel = 1
 
       # Set the number of Iterations each call -> More Iterations = Better Security + more Hashing Time
       # > 3 Iterations recommended
@@ -103,6 +114,54 @@ module Ccrypto
 
     end
 
-  end
+  end # Argon2Config
+
+  # 
+  # BCrypt returns fixed 24 bytes (192 bits) output
+  #
+  class BCryptConfig < KDFConfig
+    # Salt is 16 bytes long
+    attr_accessor :salt
+    # Cost is exponent 2^cost, range from 4 - 31 inclusive
+    attr_accessor :cost
+
+    # Fixed output length of 24 bytes / 192 bits
+    attr_reader :outBitLength, :max_input_byte_length
+    attr_reader :salt_length, :cost_lowest_bound, :cost_upper_bound
+
+    def self.outBitLength
+      192
+    end
+
+    def self.outByteLength
+      24
+    end
+
+    def self.max_input_byte_length
+      72
+    end
+
+    def self.salt_length
+      16
+    end
+
+    def self.cost_lowest_bound
+      4
+    end
+
+    def self.cost_upper_bound
+      31
+    end
+
+    def initialize
+      #@salt = SecureRandom.random_bytes(16)
+      @cost = 16
+      @outBitLength = self.class.outBitLength
+      @max_input_byte_length = self.class.max_input_byte_length # 72 # bcrypt can only handle password  <= 72 bytes (Java BC)
+      @salt_length = self.class.salt_length
+      @cost_lowest_bound = self.class.cost_lowest_bound
+      @cost_upper_bound = self.class.cost_upper_bound
+    end
+  end # BCryptConfig
 
 end

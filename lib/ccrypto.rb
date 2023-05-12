@@ -27,8 +27,11 @@ require_relative 'ccrypto/x509_cert'
 require_relative 'ccrypto/x509_csr'
 
 require_relative 'ccrypto/digest_matcher'
+require_relative 'ccrypto/in_memory_record'
 
 module Ccrypto
+  include TR::CondUtils
+
   class Error < StandardError; end
   class CcryptoProviderException < StandardError; end
 
@@ -62,19 +65,25 @@ module Ccrypto
   Root_OID = ["2","0","18"]
 
   def self.logger(tag = nil, &block)
-    if @_clogger.nil?
-      @_clogger = TeLogger::Tlogger.new
-      @_clogger.tag = :ccrypto
-    end
+      if @_logger.nil?
+        @_logger = TeLogger::Tlogger.new
+      end
 
-    if block
+     if block
       if not_empty?(tag)
-        @_clogger.with_tag(tag, &block)
+        @_logger.with_tag(tag, &block)
       else
-        @_clogger.with_tag(@_clogger.tag, &block)
+        @_logger.with_tag(@_logger.tag, &block)
       end
     else
-      @_clogger
+      if is_empty?(tag)
+        @_logger.tag = :CryptoJava
+        @_logger
+      else
+        # no block but tag is given? hmm
+        @_logger.tag = tag
+        @_logger
+      end
     end
 
   end

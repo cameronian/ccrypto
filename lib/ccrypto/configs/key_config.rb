@@ -4,7 +4,14 @@ module Ccrypto
   class KeyConfig
     include AlgoConfig
 
-    attr_accessor :algo, :keysize
+    attr_reader :algo, :keysize
+
+    attr_accessor :provider_config
+
+    def initialize(algo, keysize)
+      @algo = algo
+      @keysize = keysize
+    end
 
     def to_s
       "#{@algo}/#{@keysize}"

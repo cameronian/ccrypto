@@ -17,7 +17,7 @@ module Ccrypto
 
     attr_reader :default
 
-    attr_accessor :native_config 
+    attr_accessor :provider_config 
 
     def initialize(status = Algo_Active, default = false)
       @algo_status = status
@@ -64,9 +64,9 @@ module Ccrypto
 
   class ECCConfig < KeypairConfig
 
-    def self.name
-      "Elliptic Curve (ECC)"
-    end
+    #def self.name
+    #  "Elliptic Curve (ECC)"
+    #end
 
     attr_accessor :curve
     def initialize(curve = nil, status = Algo_Active, default = false)
@@ -77,7 +77,7 @@ module Ccrypto
     end
 
     def to_s
-      "#{@curve}"
+      "ECC - #{@curve}"
     end
 
     def self.supported_curves(&block)
@@ -119,9 +119,9 @@ module Ccrypto
 
   # X25519 for key exchange
   class X25519Config < KeypairConfig
-    def self.name
-      "X25519 (Data Encipherment only)"
-    end
+    #def self.name
+    #  "X25519 (Data Encipherment only)"
+    #end
     def initialize
       algo = :x25519
       super(Algo_Active, true)
@@ -130,9 +130,9 @@ module Ccrypto
 
   # PQ Crystal Kyber
   class CrystalKyberConfig < KeypairConfig
-    def self.name
-      "PQ Crystal Kyber Family (for Cipher)"
-    end
+    #def self.name
+    #  "PQ Crystal Kyber Family (for Cipher)"
+    #end
     def initialize(kyberParam, default = false)
       @algo = kyberParam
       super(Algo_Active, default)
@@ -141,13 +141,15 @@ module Ccrypto
 
   # PQ Crystal Dlithium
   class CrystalDilithiumConfig < KeypairConfig
-    def self.name
-      "PQ Crystal Dilithium Family (for Signing)"
-    end
+    # has unintended consequences during YAML dump and load
+    #def self.name
+    #  "PQ Crystal Dilithium Family (for Signing)"
+    #end
     def initialize(param, default = false)
       @algo = param
       super(Algo_Active, default)
     end
+
     def to_s
       "PQ Crystal Dilithium #{@algo.name}"
     end

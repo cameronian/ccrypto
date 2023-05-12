@@ -4,10 +4,15 @@ module Ccrypto
   class HMACConfig
     include AlgoConfig
 
-    attr_accessor :key, :digest
+    attr_accessor :ccrypto_key
 
-    def initialize
-      @digest = :sha256
+    attr_reader :digest_config
+
+    attr_accessor :provider_config
+
+    def initialize(digestConfig)
+      @digest_config = digestConfig
     end
+
   end
 end

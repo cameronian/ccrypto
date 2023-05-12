@@ -2,16 +2,17 @@
 
 module Ccrypto
   class SecretKey
-    attr_accessor :algo
-    attr_accessor :key
+    attr_reader :algo, :keysize
 
-    def initialize(algo, key)
+    attr_reader :native_key
+
+    attr_accessor :provider_config
+
+    def initialize(algo, keysize, key)
       @algo = algo
-      @key = key
+      @keysize = keysize
+      @native_key = key
     end
 
-    def native
-      @key
-    end
   end
 end
