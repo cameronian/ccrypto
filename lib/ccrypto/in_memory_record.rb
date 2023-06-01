@@ -1,5 +1,6 @@
 
 require 'yaml'
+require 'fileutils'
 
 module Ccrypto
   class InMemoryRecordError < StandardError; end
@@ -11,11 +12,13 @@ module Ccrypto
       
       def record_storage_root=(val)
         @store_root
+        FileUtils.mkdir_p(@store_root) if not File.exist?(@store_root)
       end
 
       def record_storage_root
         if @store_root.nil?
           @store_root = File.join(Dir.home,".ccrypto")
+          FileUtils.mkdir_p(@store_root) if not File.exist?(@store_root)
         end
         @store_root
       end
