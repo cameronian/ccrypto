@@ -146,6 +146,10 @@ module Ccrypto
       #}.each(&block)
     end
 
+    def collect(&block)
+      records.collect(&block)
+    end
+
     def select(&block)
       records.select(&block)
       #records.map { |r| 

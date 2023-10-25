@@ -64,16 +64,24 @@ module Ccrypto
 
   class ECCConfig < KeypairConfig
 
-    #def self.name
-    #  "Elliptic Curve (ECC)"
-    #end
+    def self.algo_name
+      "Elliptic Curve (ECC) (Classical - Signing and Encryption)"
+    end
 
-    attr_accessor :curve
+    def self.algo_key
+      :ecc
+    end
+
+    attr_reader :curve
     def initialize(curve = nil, status = Algo_Active, default = false)
-      @algo = :ecc
+      @algo = self.class.algo_key
       @curve = curve || :prime256v1
       @curve = @curve.to_sym if not @curve.is_a?(Symbol)
       super(status, default)
+    end
+
+    def param
+      @curve
     end
 
     def to_s
@@ -86,14 +94,23 @@ module Ccrypto
   end # ECCConfig
 
   class RSAConfig < KeypairConfig
-    def self.name
-      "RSA"
+    def self.algo_name
+      "RSA (Classical - Signing and Encryption)"
     end
 
-    attr_accessor :keysize
+    def self.algo_key
+      :rsa
+    end
+
+    attr_reader :keysize
     def initialize(keysize = 2048, status = Algo_Active, default = false)
+      @algo = self.class.algo_key
       @keysize = keysize
       super(status, default)
+    end
+
+    def param
+      @keysize
     end
 
     def to_s
@@ -107,35 +124,62 @@ module Ccrypto
 
   # ED25519 for data signature
   class ED25519Config < KeypairConfig
-    def self.name
-      "ED25519 (Signing Only)"
+    def self.algo_name
+      "ED25519 (Classical - Signing Only)"
+    end
+
+    def self.algo_key
+      :ed25519
     end
 
     def initialize
-      algo = :ed25519
+      @algo = self.class.algo_key
       super(Algo_Active, true)
+    end
+
+    def param
+      nil
     end
   end
 
   # X25519 for key exchange
   class X25519Config < KeypairConfig
-    #def self.name
-    #  "X25519 (Data Encipherment only)"
-    #end
+    def self.algo_name
+      "X25519 (Data Encipherment only)"
+    end
+
+    def self.algo_key
+      :x25519
+    end
+
     def initialize
-      algo = :x25519
+      @algo = self.class.algo_key
       super(Algo_Active, true)
+    end
+    
+    def param
+      nil
     end
   end
 
   # PQ Crystal Kyber
   class CrystalKyberConfig < KeypairConfig
-    #def self.name
-    #  "PQ Crystal Kyber Family (for Cipher)"
-    #end
+    def self.algo_name
+      "Crystal Kyber (PQC - Signing)"
+    end
+    def self.algo_key
+      :crystal_kyber
+    end
+
+    attr_reader :param
     def initialize(kyberParam, default = false)
-      @algo = kyberParam
+      @param = kyberParam
+      @algo = self.class.algo_key
       super(Algo_Active, default)
+    end
+
+    def to_s
+      "PQ Crystal Kyber #{@param}"
     end
   end
 
@@ -145,13 +189,21 @@ module Ccrypto
     #def self.name
     #  "PQ Crystal Dilithium Family (for Signing)"
     #end
+    def self.algo_name
+      "Crystal Dilithium (PQC - Encryption)"
+    end
+    def self.algo_key
+      :crystal_dilithium
+    end
+    attr_reader :param
     def initialize(param, default = false)
-      @algo = param
+      @param = param
+      @algo = self.class.algo_key
       super(Algo_Active, default)
     end
 
     def to_s
-      "PQ Crystal Dilithium #{@algo.name}"
+      "PQ Crystal Dilithium #{@param}"
     end
   end
 

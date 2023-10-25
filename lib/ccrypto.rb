@@ -29,6 +29,10 @@ require_relative 'ccrypto/x509_csr'
 require_relative 'ccrypto/digest_matcher'
 require_relative 'ccrypto/in_memory_record'
 
+require_relative 'ccrypto/keystore'
+
+require_relative 'ccrypto/capability'
+
 module Ccrypto
   include TR::CondUtils
 

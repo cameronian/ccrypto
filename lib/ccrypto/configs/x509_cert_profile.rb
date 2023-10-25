@@ -231,6 +231,7 @@ module Ccrypto
         @not_after = @not_before.advance(adv)
 
       end
+      alias_method :valid_for, :validity
 
       def match_issuer_not_before(issuer_not_before)
         if not_empty?(issuer_not_before)
@@ -314,12 +315,12 @@ module Ccrypto
           emailProtection: "Email protection",
           timeStamping: "Time stamping",
           OCSPSigning: "Online Cert Status Protocol signing",
-          ipSecIKE: "IPSec Initial Key Exchange",
-          msCodeInd: "Microsoft Code Ind",
-          msCodeCom: "Microsoft Code Com",
-          msCtlsign: "Microsoft CTL Sign",
-          msEFS: "Microsoft EFS",
-          dvcs: "DVCS purposes"
+          #ipSecIKE: "IPSec Initial Key Exchange",
+          #msCodeInd: "Microsoft Code Ind",
+          #msCodeCom: "Microsoft Code Com",
+          #msCtlsign: "Microsoft CTL Sign",
+          #msEFS: "Microsoft EFS",
+          #dvcs: "DVCS purposes"
         }
 
 
@@ -371,6 +372,7 @@ module Ccrypto
       def add_custom_extension(oid, value, type = :string, critical = false)
         custom_extension[oid] = { type: type, value: value, critical: critical }
       end
+      alias_method :add_domain_extension, :add_custom_extension
 
       def custom_extension
         if @custom_extension.nil?
@@ -378,6 +380,7 @@ module Ccrypto
         end
         @custom_extension
       end
+      alias_method :domain_extension, :custom_extension
 
     end
   end

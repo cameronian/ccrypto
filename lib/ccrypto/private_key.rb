@@ -33,4 +33,8 @@ module Ccrypto
   class RSAPrivateKey < PrivateKey; end
   class ED25519PrivateKey < PrivateKey; end
   class X25519PrivateKey < PrivateKey; end
+
+  class CrystalDilithiumPrivateKey < PrivateKey; end
+  class CrystalKyberPrivateKey < PrivateKey; end
+  
 end
