@@ -8,5 +8,10 @@ module Ccrypto
       @nativeX509 = x509
     end
 
+    def X509Cert.load_x509(*args, &block)
+      Provider.instance.provider.load_x509(*args, &block)
+    end
+
+
   end
 end
